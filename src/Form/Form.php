@@ -6,6 +6,7 @@
  */
 
 namespace Svorm\Form;
+use Svorm\Interfaces\HasFormData;
 
 class Form
 {
@@ -37,7 +38,7 @@ class Form
      *
      * @since 1.0.0
      */
-    public function __construct(array $formData, array $formValues = [])
+    public function __construct(HasFormData $formData, array $formValues = [])
     {
         $this->_id = $formData->id;
         $this->_currentFieldsetId = $formData->fieldsets[0]->id;
@@ -67,6 +68,25 @@ class Form
     }
 
     /**
+     * Check if fieldset exists.
+     *
+     * @param  string $fieldsetId Fieldset id.
+     * @return bool True if fieldset exists, false if not.
+     *
+     * @since 1.0.0
+     */
+    public function fieldsetExists(string $fieldsetId): bool
+    {
+        foreach ($this->_fieldsets as $fieldset) {
+            if ($fieldset->id === $fieldsetId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * Get current fieldset id.
      *
      * @return string
@@ -88,7 +108,7 @@ class Form
     public function getCurrentFieldset()
     {
         foreach ($this->_fieldsets as $fieldset) {
-            if ($fieldset->_id === $this->_currentFieldsetId) {
+            if ($fieldset->id === $this->_currentFieldsetId) {
                 return $fieldset;
             }
         }
