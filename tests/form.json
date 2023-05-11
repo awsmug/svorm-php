@@ -1,0 +1,55 @@
+{
+    "id": "test-form",
+    "start": "contact",
+    "classes": [ "test-form" ],
+    "fieldsets": [
+        {
+            "label": "Contact Form",
+            "id": "contact",
+            "fields": [
+                {
+                    "id": "id",
+                    "label": "Name",
+                    "type": "text",
+                    "classes": [ "w1of1", "spacer2top" ], 
+                    "required": true
+                },
+                {
+                    "id": "email",
+                    "label": "Email-Adresse",
+                    "type": "text",
+                    "classes": [ "w1of1", "spacer2top" ], 
+                    "required": true,
+                    "validations": [
+                        {
+                            "type": "email",
+                            "error": "Email-Adresse ist ungültig"
+                        }
+                    ]
+                },
+                {
+                    "id": "message",
+                    "label": "Message",
+                    "type": "textarea",
+                    "classes": [ "w1of1", "spacer2top" ], 
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "trigger": "submit",            
+            "actions": [
+                {
+                    "type": "submit",
+                    "data": {
+                        "url": "https://httpbin.org/post",
+                        "method": "POST"
+                    }
+                }
+            ]
+        }
+    ]
+}
+
