@@ -9,7 +9,7 @@ namespace Svorm\Helpers;
 class Conditions
 {
     /**
-     * @var HasConditionData[] The conditions.
+     * @var array The conditions.
      */
     public $conditions = [];
 
@@ -21,8 +21,8 @@ class Conditions
     /**
      * Constructor.
      *
-     * @param HasConditionData[] $conditions The conditions.
-     * @param array              $formValues The form values.
+     * @param array $conditions The conditions.
+     * @param array $formValues The form values.
      *
      * @since 1.0.0
      */

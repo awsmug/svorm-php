@@ -7,6 +7,10 @@
 
 namespace Svorm\Form;
 
+use Svorm\Helpers\Conditions;
+use Svorm\Fields\MultipleField;
+use Svorm\Fields\SingleField;
+
 class Fieldset
 {
     /**
@@ -42,27 +46,62 @@ class Fieldset
     /**
      * Constructor.
      *
-     * @param HasFieldsetData $fieldsetData The fieldset data object.
-     * @param array           $formValues   The form values.
+     * @param \stdClass $fieldsetData The fieldset data object.
+     * @param array     $formValues   The form values.
      *
      * @since 1.0.0
      */
-    public function __construct(HasFieldsetData $fieldsetData, $formValues = [])
+    public function __construct(\stdClass $fieldsetData, $formValues = [])
     {
-        $this->id = $fieldsetData->id;
-        $this->legend = $fieldsetData->legend;
-        $this->nextFieldset = $fieldsetData->nextFieldset;
-        $this->prevFieldset = $fieldsetData->prevFieldset;
-
         foreach ($fieldsetData->fields as $fieldData) {
-            if ($fieldData->multiple === true) {
+            if (isset($fieldData->multiple) && $fieldData->multiple === true) {
                 $this->fields[] = new MultipleField($fieldData, $formValues);
             } else {
                 $this->fields[] = new SingleField($fieldData, $formValues);
             }
         }
 
-        $this->conditions = new Conditions($fieldsetData->conditions, $formValues);
+        if(isset($fieldsetData->conditions) ) {
+            $this->conditions = new Conditions($fieldsetData->conditions, $formValues);
+        }
+    }
+
+    /**
+     * Validate the fieldset.
+     * 
+     * @return bool True if the fieldset is valid, false otherwise.
+     * 
+     * @since 1.0.0
+     */
+    public function validate(): bool
+    {
+        $valid = true;
+
+        foreach ($this->fields as $field) {
+            if ($field->validate() === false) {
+                $valid = false;
+            }
+        }
+
+        return $valid;
+    }
+
+    /**
+     * Get the errors of the fieldset.
+     * 
+     * @return array An array of errors.
+     * 
+     * @since 1.0.0
+     */
+    public function getValidationErrors(): array
+    {
+        $errors = [];
+
+        foreach ($this->fields as $field) {
+            $errors = array_merge($errors, $field->getValidationErrors());
+        }
+
+        return $errors;
     }
 
     /**

@@ -15,7 +15,7 @@ class Validations
      * 
      * @since 1.0.0
      */
-    private $_errors = [];
+    private $errors = [];
 
     /**
      * Is validation done?
@@ -24,7 +24,7 @@ class Validations
      * 
      * @since 1.0.0
      */
-    private $_validated = false;
+    private $validated = false;
 
     /**
      * Validations.
@@ -33,7 +33,7 @@ class Validations
      * 
      * @since 1.0.0
      */
-    private $_validations;
+    private $validations;
 
     /**
      * Constructor.
@@ -44,7 +44,7 @@ class Validations
      */
     public function __construct( array $validations )
     {
-        $this->_validations = $validations;
+        $this->validations = $validations;
     }
 
     /**
@@ -52,116 +52,116 @@ class Validations
      * 
      * @param mixed $value A value which have to be validated.
      * 
-     * @return array Array with _errors.
+     * @return array Array with errors.
      * 
      * @since 1.0.0
      */
     public function validate($value) : array
     {
-        $this->_errors = [];
+        $this->errors = [];
 
         // Running each validation
-        foreach ($this->_validations as $validation) {
-            $valueAsNumber = intval($validation->value);
+        foreach ($this->validations as $validation) {
+            $valueAsNumber = isset($validation->value) ? floatval($validation->value): null;
 
             // Assigning Validation functions
             $methods = new ValidationMethods();
 
             switch( $validation->type ) {
-            case 'string':
-                if (! $methods->isString($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'letters':
-                if (! $methods->letters($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'int':
-                if (! $methods->isInt($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'number':
-                if (! $methods->isNumber($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'email':
-                if (! $methods->isEmail($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'min':
-                if (! $methods->min($value, $valueAsNumber) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'max':
-                if (! $methods->max($value, $valueAsNumber) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'minLength':
-                if (! $methods->minLength($value, $valueAsNumber) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'maxLength':
-                if (! $methods->maxLength($value, $valueAsNumber) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'empty':
-                if ($methods->isEmpty($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;                    
-            case 'inArray':
-                if (! $methods->inArray($value, $validation->values) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;
-            case 'isChecked':
-                if (! $methods->isChecked($value) ) {
-                    array_push($this->_errors, $validation->error);
-                }
-                break;                    
-            default:
-                array_push($this->_errors, 'Validations-Typ "' . $validation->type . '" existiert nicht.');
-                break;
+                case 'string':
+                    if (! $methods->isString($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'letters':
+                    if (! $methods->letters($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'int':
+                    if (! $methods->isInt($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'number':
+                    if (! $methods->isNumber($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'email':
+                    if (! $methods->isEmail($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'min':
+                    if (! $methods->min($value, $valueAsNumber) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'max':
+                    if (! $methods->max($value, $valueAsNumber) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'minLength':
+                    if (! $methods->minLength($value, $valueAsNumber) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'maxLength':
+                    if (! $methods->maxLength($value, $valueAsNumber) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'empty':
+                    if ($methods->isEmpty($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;                    
+                case 'inArray':
+                    if (! $methods->inArray($value, $validation->values) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;
+                case 'isChecked':
+                    if (! $methods->isChecked($value) ) {
+                        array_push($this->errors, $validation->error);
+                    }
+                    break;                    
+                default:
+                    array_push($this->errors, 'Validation-Type "' . $validation->type . '" does not exist.');
+                    break;
             }
             
         }
 
-        $this->_validated = true;
+        $this->validated = true;
 
-        return $this->_errors;
+        return $this->errors;
     }
 
     /**
-     * Are there _errors after validation?
+     * Are there errors after validation?
      * 
-     * @return boolean True on _errors, false if not.
+     * @return boolean True on errors, false if not.
      * 
      * @since 1.0.0
      */
     public function isError() : bool
     {
-        return count($this->_errors) > 0;
+        return count($this->errors) > 0;
     }
 
     /**
-     * Get _errors after validation.
+     * Get errors after validation.
      * 
-     * @return array All _errors.
+     * @return array All errors.
      * 
      * @since 1.0.0
      */
     public function getErrors() : array
     {
-        return $this->_errors;
+        return $this->errors;
     }
 
     /**
@@ -173,6 +173,6 @@ class Validations
      */
     public function isValidated() : bool
     {
-        return $this->_validated;
+        return $this->validated;
     }
 }

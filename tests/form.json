@@ -12,7 +12,14 @@
                     "label": "Name",
                     "type": "text",
                     "classes": [ "w1of1", "spacer2top" ], 
-                    "required": true
+                    "required": true,
+                    "validations": [
+                        {
+                            "type": "minLength",
+                            "value": 3,
+                            "error": "Name muss mindestens 3 Zeichen lang sein"
+                        }
+                    ]
                 },
                 {
                     "id": "email",
