@@ -44,6 +44,10 @@ class MultipleField extends Field
      */
     public function validate()
     {
+        if( ! $this->conditionsFulfilled() ) {
+            return true;
+        }
+        
         $validations = new Validations($this->validations);
         $errors = [];
 

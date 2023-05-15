@@ -32,6 +32,10 @@ class SingleField extends Field
      */
     public function validate()
     {
+        if( ! $this->conditionsFulfilled() ) {
+            return true;
+        }
+        
         $validations = new Validations($this->validations);
         $validations->validate($this->getValue());
         $this->isValidated = true;
